@@ -15,7 +15,7 @@ regenerar em resolução maior, comece a partir de lá.
 |---|---|---|
 | `hero-1600.webp` / `hero-800.webp` | `hero.jpg` | Fundo do hero (Ken Burns) |
 | `servico-limpeza.webp` / `-500.webp` | `limpeza.webp` | Card "Limpeza e Conservação" |
-| `servico-portaria.webp` / `-500.webp` | `portaria.webp` | Card "Portaria" |
+| `servico-manutencao.webp` / `-500.webp` | `manutencao.webp` | Card "Manutenção Predial" |
 | `servico-jardinagem.webp` / `-500.webp` | `jardinagem.webp` | Card "Jardinagem e Paisagismo" |
 | `servico-acesso.webp` / `-500.webp` | `acesso.webp` | Card "Controle de Acesso e Monitoramento" |
 
@@ -24,6 +24,12 @@ cards), convertidas para WebP (qualidade 82). Sem recorte manual — o
 enquadramento final é feito via `object-cover`/`object-position` no CSS
 (ver comentário em `src/sections/Hero.tsx` sobre por que o hero usa
 `object-[25%_center]`).
+
+**Nota sobre `servico-manutencao.webp`:** substitui a foto antiga de
+porteiro/recepção usada quando o serviço se chamava "Portaria" (renomeado
+para "Manutenção Predial" — controle de acesso já cobre a função de
+portaria/recepção). O arquivo antigo (`portaria.webp`) permanece em
+`assets-originais/` só por rastreabilidade histórica, sem uso no site.
 
 **Nota sobre `servico-acesso.webp`:** deliberadamente não mostra vigilante,
 ronda ou vigilância patrimonial — mostra tecnologia/sala de controle de acesso,

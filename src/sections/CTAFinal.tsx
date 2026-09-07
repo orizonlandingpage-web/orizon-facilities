@@ -23,7 +23,7 @@ export function CTAFinal() {
     <section id="contato" className="bg-offwhite px-6 py-24">
       <div className="mx-auto max-w-xl text-center">
         <h2 className="font-display text-3xl text-navy sm:text-4xl">
-          Peça uma proposta feita para o seu condomínio — não uma tabela de preços.
+          Peça uma proposta feita para o seu condomínio, não uma tabela de preços.
         </h2>
         <div className="mx-auto mt-4 h-px w-16 bg-gold" aria-hidden="true" />
         <p className="mt-4 text-graytext">
@@ -78,7 +78,7 @@ export function CTAFinal() {
             >
               <option value="">Ainda não sei / quero todos</option>
               <option value="Limpeza e Conservação">Limpeza e Conservação</option>
-              <option value="Portaria">Portaria</option>
+              <option value="Manutenção Predial">Manutenção Predial</option>
               <option value="Jardinagem e Paisagismo">Jardinagem e Paisagismo</option>
               <option value="Controle de Acesso e Monitoramento">
                 Controle de Acesso e Monitoramento

@@ -1,4 +1,4 @@
-const SERVICOS = ['Limpeza', 'Portaria', 'Jardinagem', 'Controle de Acesso'];
+const SERVICOS = ['Limpeza', 'Manutenção Predial', 'Jardinagem', 'Controle de Acesso'];
 
 /**
  * Quantas vezes repetir SERVICOS dentro de cada "metade" da trilha. O truque

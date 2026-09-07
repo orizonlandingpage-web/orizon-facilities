@@ -3,16 +3,16 @@ import { SectionHeading } from '../components/SectionHeading';
 
 const dores = [
   {
-    titulo: 'Falta sem reposição',
-    texto: 'Porteiro falta, ninguém cobre, e o síndico só descobre quando o morador reclama.',
+    titulo: 'Desfalque na escala operacional',
+    texto: 'Ausências não planejadas e falta de cobertura imediata, impactando a rotina e a segurança dos moradores.',
   },
   {
     titulo: 'Turnover alto',
-    texto: 'Rosto novo na portaria todo mês — o morador nunca chega a conhecer quem cuida do prédio.',
+    texto: 'Trocas constantes no quadro funcional, comprometendo a padronização do serviço e o reconhecimento do condomínio.',
   },
   {
-    titulo: 'Passivo trabalhista',
-    texto: 'Sem fiscalização documentada, o condomínio responde de forma subsidiária se a prestadora não pagar.',
+    titulo: 'Exposição a passivos trabalhistas',
+    texto: 'Insegurança jurídica decorrente da ausência de auditoria rigorosa de recolhimento de encargos e conformidade legal.',
   },
 ];
 
@@ -21,9 +21,9 @@ export function Problema() {
     <section className="bg-offwhite px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="O que dói hoje"
-          title="Você não contratou para administrar gente."
-          description="É exatamente isso que a maioria das terceirizadas empurra de volta pro síndico."
+          eyebrow="Os desafios do dia a dia"
+          title="Terceirização eficiente não deve gerar sobrecarga ao síndico."
+          description="Falhas operacionais e ausência de respaldo técnico frequentemente transferem demandas indevidas à administração predial."
         />
 
         <div className="mt-14 grid gap-10 sm:grid-cols-3">

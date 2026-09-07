@@ -13,18 +13,18 @@ const servicos = [
   {
     nome: 'Limpeza e Conservação',
     texto:
-      'Áreas comuns impecáveis todos os dias, com equipe fixa, produtos e equipamentos por nossa conta.',
+      'Áreas comuns sempre limpas, com equipe fixa. Equipes qualificadas.',
     imagem: 'servico-limpeza',
   },
   {
-    nome: 'Portaria',
+    nome: 'Manutenção Predial',
     texto:
-      'Porteiros treinados em recepção, triagem de visitantes e procedimento de emergência, 24h.',
-    imagem: 'servico-portaria',
+      'Manutenção elétrica, hidráulica e de estrutura com equipe própria e chamado registrado, sem intermediário.',
+    imagem: 'servico-manutencao',
   },
   {
     nome: 'Jardinagem e Paisagismo',
-    texto: 'Poda, corte, adubação e irrigação em calendário fixo, não sob demanda.',
+    texto: 'Cuidado contínuo para o seu jardim com um cronograma regular de poda, corte, adubação e irrigação.',
     imagem: 'servico-jardinagem',
   },
   {
@@ -38,17 +38,17 @@ export function Servicos() {
   return (
     <section className="bg-navy px-6 py-24">
       <div className="mx-auto max-w-6xl">
-        <SectionHeading eyebrow="O que fazemos" title="Quatro serviços, uma gestão só." onDark />
+        <SectionHeading eyebrow="O que fazemos" title="Nossos serviços, uma gestão só." onDark />
 
         {/*
           aspect-video (16:9), não 4:5: as fotos mostram cenas com pessoas
-          espalhadas horizontalmente (aperto de mão, portaria com catraca).
-          Um recorte 4:5 (mais alto que largo) cortaria uma das pessoas fora
-          do quadro. 16:9 fica perto da proporção nativa dessas fotos —
-          quase nenhum recorte de object-cover.
+          espalhadas horizontalmente (técnicos lado a lado na manutenção,
+          aperto de mão). Um recorte 4:5 (mais alto que largo) cortaria uma
+          das pessoas fora do quadro. 16:9 fica perto da proporção nativa
+          dessas fotos — quase nenhum recorte de object-cover.
         */}
         <div className="mt-14 grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
-          {servicos.map((servico, i) => (
+          {servicos.map((servico) => (
             <Reveal key={servico.nome} className="group">
               <div className="relative aspect-video overflow-hidden rounded-md">
                 <img
@@ -63,12 +63,6 @@ export function Servicos() {
                   className="absolute inset-0 bg-gradient-to-t from-navy from-10% via-navy/20 via-40% to-transparent"
                   aria-hidden="true"
                 />
-                <span
-                  className="absolute bottom-3 left-4 font-display text-3xl font-bold text-gold"
-                  aria-hidden="true"
-                >
-                  {String(i + 1).padStart(2, '0')}
-                </span>
               </div>
 
               <h3 className="mt-5 font-display text-lg font-bold text-offwhite">{servico.nome}</h3>

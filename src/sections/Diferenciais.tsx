@@ -3,31 +3,31 @@ import { SectionHeading } from '../components/SectionHeading';
 
 const diferenciais = [
   {
-    titulo: 'Cobertura de falta no mesmo turno',
-    texto: 'Folguista e plantonista dimensionados no contrato. Posto vago não vira problema seu.',
+    titulo: 'Planejamento de escalas',
+    texto: 'Organização prévia e rotinas alinhadas para manter a operação do seu condomínio funcionando de forma contínua.',
   },
   {
-    titulo: 'Documentação trabalhista todo mês',
+    titulo: 'Transparência documental',
     texto:
-      'Guias de FGTS e INSS, folha de pagamento e certidões negativas entregues com a nota fiscal.',
+      'Acompanhamento claro das obrigações legais e trabalhistas para a tranquilidade da administração do prédio.',
   },
   {
-    titulo: 'Supervisor com nome e telefone',
-    texto: 'Cada condomínio tem um supervisor responsável e visita periódica definida em contrato.',
+    titulo: 'Comunicação direta.',
+    texto: 'Canal de suporte próximo e ponto focal definido para atender prontamente as demandas do condomínio.',
   },
   {
-    titulo: 'Equipe treinada antes de começar',
+    titulo: 'Alinhamento e capacitação',
     texto:
-      'Integração, normas de segurança do trabalho, EPI e conduta com morador são por nossa conta.',
+      'Profissionais orientados sobre as regras de segurança, uso de equipamentos e conduta de atendimento aos moradores.',
   },
   {
-    titulo: 'Custo fixo e previsível',
-    texto: 'Um valor por posto, sem 13º, férias ou rescisão surpreendendo a previsão orçamentária.',
+    titulo: 'Previsibilidade financeira',
+    texto: 'Contratos estruturados para auxiliar o planejamento do condomínio, evitando custos operacionais inesperados.',
   },
   {
-    titulo: 'Baixo turnover',
+    titulo: 'Foco em estabilidade',
     texto:
-      'Salário em dia e gestão de pessoas de verdade. O morador reconhece quem trabalha no prédio.',
+      'Atenção à gestão de pessoas e valorização da equipe para promover um ambiente de confiança e rotina estável.',
   },
 ];
 
@@ -36,8 +36,8 @@ export function Diferenciais() {
     <section className="bg-offwhite px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="Por que a Orizon"
-          title="Por que síndicos trocam de terceirizada — e ficam com a Orizon."
+          eyebrow="O compromisso Orizon"
+          title="Uma gestão de terceirização pensada para facilitar o seu dia a dia."
         />
 
         <div className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">

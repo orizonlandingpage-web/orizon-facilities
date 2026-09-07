@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { site } from '../config/site';
 import { buildWhatsAppLink } from '../lib/whatsapp';
+import { getStoredConsent, subscribeToConsentChange } from '../lib/cookieConsent';
 
 /**
  * Botão flutuante fixo de WhatsApp.
@@ -27,6 +28,10 @@ import { buildWhatsAppLink } from '../lib/whatsapp';
  */
 export function WhatsAppFab() {
   const [visible, setVisible] = useState(false);
+  // Enquanto o banner de cookies não foi respondido, ele ocupa a faixa
+  // inferior inteira da tela — o FAB ficaria por baixo dele. Some até o
+  // usuário aceitar ou recusar.
+  const [consentPending, setConsentPending] = useState(() => getStoredConsent() === null);
 
   useEffect(() => {
     // #topo é o <section> do Hero, sempre presente antes deste componente
@@ -41,9 +46,14 @@ export function WhatsAppFab() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(
+    () => subscribeToConsentChange(() => setConsentPending(getStoredConsent() === null)),
+    [],
+  );
+
   const href = buildWhatsAppLink(site.whatsappMensagemPadrao);
 
-  if (!visible) return null;
+  if (!visible || consentPending) return null;
 
   return (
     <a

@@ -22,22 +22,6 @@ número ou depoimento fictício é publicidade enganosa (CDC, arts. 36–37).
 - [ ] Cidade(s)/região de atuação real
 - [ ] CNPJ
 
-## Números da `BarraConfianca` (hoje todos zerados)
-
-- [ ] Anos de mercado
-- [ ] Postos ativos
-- [ ] Condomínios atendidos
-
-## Depoimentos (`src/sections/Depoimentos.tsx`)
-
-Os 3 depoimentos atuais são **100% fictícios**, gerados só como gabarito de
-formato. Substituir por depoimentos reais antes de publicar:
-
-- [ ] Coletar depoimento de um síndico profissional (problema antes → o que mudou)
-- [ ] Coletar depoimento de uma administradora
-- [ ] Coletar depoimento de um síndico morador
-- [ ] Autorização de uso de imagem/nome de cada um
-
 ## FAQ (`src/sections/FAQ.tsx`)
 
 - [ ] Prazo médio real de implantação (pergunta 6)
@@ -53,6 +37,6 @@ Reclame Aqui).
 
 ## Imagens
 
-Resolvido — hero e os 4 cards de serviço usam imagens de marca definitivas
+Resolvido — hero e os cards de serviço usam imagens de marca definitivas
 (ver `CREDITOS-IMAGENS.md`). `PROMPTS-IMAGENS.md` fica só como referência caso
 queira gerar variações no futuro.

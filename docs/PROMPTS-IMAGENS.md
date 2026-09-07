@@ -21,8 +21,9 @@ mudar código (ver a tabela de arquivos em `CREDITOS-IMAGENS.md`).
 **Limpeza e Conservação** — equipe uniformizada em ação real (não posando),
 área comum de condomínio, luz natural.
 
-**Portaria** — porteiro(a) uniformizado(a) em portaria moderna, atendendo
-morador ou visitante, ambiente limpo e bem iluminado.
+**Manutenção Predial** — técnico(a) uniformizado(a) em manutenção elétrica,
+hidráulica ou de equipamentos prediais (casa de máquinas, quadro elétrico),
+ambiente técnico bem iluminado.
 
 **Jardinagem e Paisagismo** — jardineiro(a) uniformizado(a) cuidando de área
 verde do condomínio, luz de manhã.

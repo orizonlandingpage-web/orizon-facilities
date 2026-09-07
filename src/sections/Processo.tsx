@@ -12,7 +12,7 @@ const passos = [
     numero: '02',
     titulo: 'Proposta dimensionada',
     texto:
-      'Você recebe o desenho dos postos, escalas e escopo por serviço — item por item, sem pacote fechado que ninguém entende.',
+      'Você recebe o desenho dos postos, escalas e escopo por serviço, item por item, sem pacote fechado que ninguém entende.',
   },
   {
     numero: '03',

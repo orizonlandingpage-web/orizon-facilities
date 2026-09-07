@@ -27,11 +27,11 @@ describe('montarMensagemContato', () => {
     const msg = montarMensagemContato({
       nome: 'Maria Silva',
       condominio: 'Ed. Jardins',
-      servico: 'Portaria',
+      servico: 'Manutenção Predial',
     });
     expect(msg).toContain('Nome: Maria Silva');
     expect(msg).toContain('Condomínio: Ed. Jardins');
-    expect(msg).toContain('Serviço de interesse: Portaria');
+    expect(msg).toContain('Serviço de interesse: Manutenção Predial');
   });
 
   it('omite campos vazios em vez de deixar em branco', () => {

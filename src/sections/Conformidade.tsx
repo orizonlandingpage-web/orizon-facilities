@@ -21,7 +21,7 @@ export function Conformidade() {
         <SectionHeading
           eyebrow="Conformidade"
           title="Sua fiscalização documentada, todo mês, sem você precisar cobrar."
-          description="Pela Súmula 331 do TST, o condomínio tem responsabilidade subsidiária pelos encargos trabalhistas da terceirizada. O que protege o síndico é a fiscalização — e ela precisa ser documentada."
+          description="Pela Súmula 331 do TST, o condomínio tem responsabilidade subsidiária pelos encargos trabalhistas da terceirizada. O que protege o síndico é a fiscalização, que precisa ser documentada."
           onDark
         />
 

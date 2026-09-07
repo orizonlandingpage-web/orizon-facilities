@@ -66,8 +66,8 @@ export function Hero() {
             </h1>
 
             <p className="mt-5 max-w-xl text-base text-offwhite/85 sm:mt-6 sm:text-lg">
-              Limpeza, portaria, jardinagem e controle de acesso com equipe própria da Orizon,
-              escala coberta e documentação trabalhista auditada mês a mês.
+              Manutenção predial, limpeza, jardinagem e controle de acesso com equipe própria
+              Orizon. Escala 100% garantida e conformidade trabalhista auditada mês a mês.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
