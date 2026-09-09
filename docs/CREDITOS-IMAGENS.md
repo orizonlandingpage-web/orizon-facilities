@@ -39,7 +39,7 @@ consistente com o card "Controle de Acesso e Monitoramento" (ver
 
 ## Logo (`public/images/logo*.webp`, `public/*icon*.png`, `public/favicon-32.png`)
 
-Fornecida pelo usuário em `public/images/Logo.png` (autoria da Orizon/terceiro
+Fornecida pelo usuário em `assets-originais/logo-original.png` (autoria da Orizon/terceiro
 contratado pela Orizon — não é asset de banco de imagens). Processada localmente
 com ffmpeg: recorte da área transparente, geração da versão branca (silhueta,
 para uso sobre navy) e do favicon/apple-touch-icon a partir do emblema. Nenhuma

@@ -4,7 +4,7 @@
 
 /*
  * Tokens da identidade visual — fonte da verdade do projeto.
- * Ver CLAUDE.md para a origem dos valores. Tailwind v4 lê `@theme` para
+ * Ver docs/ARQUITETURA.md para a origem dos valores. Tailwind v4 lê `@theme` para
  * gerar as classes utilitárias (bg-navy, text-gold, ...); não existe mais
  * tailwind.config.ts para isso.
  */

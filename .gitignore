@@ -6,14 +6,9 @@ dist-ssr/
 .vscode/*
 !.vscode/extensions.json
 
-# Claude Code — local settings (preferências pessoais não devem ir pro git)
-.claude/settings.local.json
-
-# Logs gerados pelos hooks (ative se for usar)
-.claude/logs/
-.claude/bash-commands.log
-
-# Cache local
-.claude/.cache/
-
-aula-wsl-claude-code-starter.md
+# Ferramentas de desenvolvimento local — não fazem parte do produto entregue
+.claude/
+.claude-plugin/
+.mcp.json
+CLAUDE.md
+PROMPT.md
