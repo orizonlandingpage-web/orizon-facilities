@@ -11,10 +11,10 @@ export const site = {
   nome: 'Orizon Facilities',
 
   // 55 + DDD + número, só dígitos (sem +, espaço, hífen ou parênteses)
-  whatsappNumero: '5579996384207',
+  whatsappNumero: '5579996384307',
   whatsappMensagemPadrao: 'Olá! Vim pelo site da Orizon Facilities e gostaria de um orçamento.',
 
-  telefone: '(79) 99638-4207',
+  telefone: '(79) 99638-4307',
   email: 'orizonfacilities@gmail.com',
   cidade: 'Aracaju',
   estado: 'SE',
@@ -24,7 +24,7 @@ export const site = {
   regiaoAtendida: ['Aracaju', 'Barra dos Coqueiros', 'São Cristóvão', 'Nossa Senhora do Socorro'],
   regiaoTexto: 'Aracaju e região metropolitana',
 
-  cnpj: '00.000.000/0001-00',
+  cnpj: '67.938.834/0001-13',
 
   // Sem barra final: canonical, Open Graph e sitemap.xml montam a URL a
   // partir daqui (ex.: `${site.url}/`). Trocar aqui é o único lugar a mudar
