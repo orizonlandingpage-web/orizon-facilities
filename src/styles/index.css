@@ -35,8 +35,8 @@
 
   /*
    * Sora casa com a tipografia geométrica bold da wordmark real da marca
-   * (public/images/Logo.png) — trocado a partir do serif Fraunces, que não
-   * combinava com a identidade visual já existente da Orizon.
+   * (assets-originais/logo-original.png) — trocado a partir do serif
+   * Fraunces, que não combinava com a identidade visual já existente da Orizon.
    */
   --font-display: 'Sora Variable', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
