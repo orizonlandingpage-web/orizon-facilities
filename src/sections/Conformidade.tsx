@@ -16,7 +16,7 @@ const documentos = [
 
 export function Conformidade() {
   return (
-    <section className="bg-navy px-6 py-24">
+    <section id="conformidade" className="bg-navy px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="Conformidade"

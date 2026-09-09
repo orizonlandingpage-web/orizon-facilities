@@ -13,30 +13,36 @@ const servicos = [
   {
     nome: 'Limpeza e Conservação',
     texto:
-      'Áreas comuns sempre limpas, com equipe fixa. Equipes qualificadas.',
+      'Áreas comuns do seu condomínio em Aracaju sempre limpas, com equipe fixa e qualificada.',
     imagem: 'servico-limpeza',
+    alt: 'Equipe de limpeza da Orizon higienizando a área comum de um condomínio',
   },
   {
     nome: 'Manutenção Predial',
     texto:
       'Manutenção elétrica, hidráulica e de estrutura com equipe própria e chamado registrado, sem intermediário.',
     imagem: 'servico-manutencao',
+    alt: 'Técnico da Orizon realizando manutenção predial em um condomínio',
   },
   {
     nome: 'Jardinagem e Paisagismo',
-    texto: 'Cuidado contínuo para o seu jardim com um cronograma regular de poda, corte, adubação e irrigação.',
+    texto:
+      'Cuidado contínuo para o seu jardim com um cronograma regular de poda, corte, adubação e irrigação.',
     imagem: 'servico-jardinagem',
+    alt: 'Jardineiro da Orizon cuidando do paisagismo de um condomínio',
   },
   {
     nome: 'Controle de Acesso e Monitoramento',
-    texto: 'Triagem de visitantes e monitoramento de câmeras com procedimento escrito.',
+    texto:
+      'Portaria com triagem de visitantes e monitoramento de câmeras, com procedimento escrito.',
     imagem: 'servico-acesso',
+    alt: 'Porteiro da Orizon fazendo o controle de acesso na entrada de um condomínio',
   },
 ];
 
 export function Servicos() {
   return (
-    <section className="bg-navy px-6 py-24">
+    <section id="servicos" className="bg-navy px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading eyebrow="O que fazemos" title="Nossos serviços, uma gestão só." onDark />
 
@@ -55,7 +61,7 @@ export function Servicos() {
                   src={`/images/${servico.imagem}.webp`}
                   srcSet={`/images/${servico.imagem}-500.webp 500w, /images/${servico.imagem}.webp 800w`}
                   sizes="(min-width: 1280px) 23vw, (min-width: 640px) 47vw, 90vw"
-                  alt=""
+                  alt={servico.alt}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />

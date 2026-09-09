@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://orizonfacilities.com.br/sitemap.xml

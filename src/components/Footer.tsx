@@ -11,12 +11,12 @@ export function Footer() {
       <div className="mx-auto max-w-6xl">
         <img src="/images/logo-white.webp" alt="Orizon Facilities" className="h-14 w-auto" />
         <p className="mt-4 max-w-md text-sm">
-          Terceirização de serviços condominiais: limpeza, manutenção predial, jardinagem e
-          controle de acesso.
+          Terceirização de serviços condominiais: limpeza, manutenção predial, jardinagem e controle
+          de acesso.
         </p>
 
         <div className="mt-8 grid gap-2 text-sm sm:grid-cols-2">
-          <p>Atendemos condomínios em {site.cidade}.</p>
+          <p>Atendemos condomínios em {site.regiaoAtendida.join(', ')}.</p>
           <p>CNPJ {site.cnpj}</p>
           <p>
             <a href={`tel:${site.telefone.replace(/\D/g, '')}`} className="hover:text-offwhite">

@@ -77,6 +77,13 @@ npx vitest run -t "rejeita número muito curto"  # um `it` pelo nome
   como fallback via `IntersectionObserver` para navegadores sem scroll-driven animations
   (Firefox, hoje). Invariante a preservar: o conteúdo é visível por padrão — nunca em branco se
   o fallback falhar.
+- **SEO** tem duas fontes, ambas derivadas de `src/config/site.ts`: `index.html` (metatags
+  estáticas — title, description, canonical, Open Graph) e `src/lib/structured-data.ts`
+  (JSON-LD `ProfessionalService`/`WebSite`/`FAQPage`, injetado no `<head>` do build pelo
+  plugin em `vite.config.ts`, não em runtime — por isso `src/sections/FAQ.tsx` não renderiza
+  `<script type="application/ld+json">` próprio). As perguntas do FAQ vivem em
+  `src/config/faq.ts`, consumidas pelos dois. `public/robots.txt` e `public/sitemap.xml`
+  têm o domínio (`site.url`) escrito literalmente — atualizar junto se ele mudar.
 - `src/components/WhatsAppFab.tsx` só renderiza depois que o hero (`#topo`) sai da viewport,
   para não sobrepor o CTA do próprio hero em telas baixas. `Footer` tem padding extra para não
   cobrir o último elemento focável (WCAG 2.4.11).

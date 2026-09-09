@@ -30,7 +30,7 @@ const passos = [
 
 export function Processo() {
   return (
-    <section className="bg-offwhite px-6 py-24">
+    <section id="processo" className="bg-offwhite px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="Como funciona"

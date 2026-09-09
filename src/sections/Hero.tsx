@@ -57,7 +57,7 @@ export function Hero() {
         <div className="mx-auto w-full max-w-6xl px-6 py-20 sm:py-24">
           <div className="max-w-2xl border-l-4 border-gold pl-6">
             <p className="mb-4 font-display text-sm font-bold tracking-[0.25em] text-gold uppercase sm:mb-2">
-              Serviços Condominiais
+              Serviços Condominiais em Aracaju
             </p>
 
             <h1 className="font-display text-3xl leading-[1.05] font-bold text-offwhite sm:text-5xl sm:leading-[1.08] md:text-6xl">
@@ -66,8 +66,9 @@ export function Hero() {
             </h1>
 
             <p className="mt-5 max-w-xl text-base text-offwhite/85 sm:mt-6 sm:text-lg">
-              Manutenção predial, limpeza, jardinagem e controle de acesso com equipe própria
-              Orizon. Escala 100% garantida e conformidade trabalhista auditada mês a mês.
+              Manutenção predial, limpeza, jardinagem e portaria com equipe própria Orizon em
+              Aracaju e região metropolitana. Escala 100% garantida e conformidade trabalhista
+              auditada mês a mês.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
