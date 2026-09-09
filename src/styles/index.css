@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/sora';
+@import '@fontsource-variable/archivo';
+
+/*
+ * Tokens da identidade visual — fonte da verdade do projeto.
+ * Ver docs/ARQUITETURA.md para a origem dos valores. Tailwind v4 lê `@theme` para
+ * gerar as classes utilitárias (bg-navy, text-gold, ...); não existe mais
+ * tailwind.config.ts para isso.
+ */
+@theme {
+  --color-navy: #18293c;
+  --color-gold: #c5985b;
+  --color-graymid: #8f98a1;
+  --color-offwhite: #f7f8fa;
+
+  /*
+   * Tom derivado do cinza da marca, escurecido em direção ao navy.
+   * O #8f98a1 original reprova contraste AA sobre fundo claro (2,75:1);
+   * este tom (5,06:1) resolve isso sem alterar a identidade — mesmo matiz,
+   * só mais escuro. Use para texto secundário sobre off-white/branco.
+   * O #8f98a1 original continua válido sobre fundo navy (5,05:1).
+   */
+  --color-graytext: #5f6c79;
+
+  /*
+   * Tom derivado do dourado da marca, mesmo matiz (34,5°) e saturação
+   * próxima, só mais escuro (L 56%→36%). O #c5985b original reprova
+   * contraste sobre fundo claro (2,47:1, medido com axe-core); este tom
+   * (5,03:1) resolve isso. Use para texto em dourado sobre off-white/branco
+   * (eyebrows, números, o "+" do FAQ). O #c5985b original continua válido
+   * como texto sobre navy (5,64:1) e como fundo de botão com texto navy.
+   */
+  --color-gold-text: #896431;
+
+  /*
+   * Sora casa com a tipografia geométrica bold da wordmark real da marca
+   * (assets-originais/logo-original.png) — trocado a partir do serif
+   * Fraunces, que não combinava com a identidade visual já existente da Orizon.
+   */
+  --font-display: 'Sora Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+}
+
+/*
+ * Scroll reveal — CSS puro, sem dependência de JS.
+ *
+ * Regra crítica: o conteúdo é visível por padrão. A ocultação só existe
+ * dentro de @supports + prefers-reduced-motion: no-preference. Se o
+ * navegador não suportar animation-timeline (Firefox, hoje) e o JS de
+ * fallback (useInView) não rodar por qualquer motivo, o conteúdo continua
+ * visível — nunca em branco.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      opacity: 0;
+      translate: 0 1.5rem;
+      animation: reveal-in linear both;
+      /* animation-timeline vem DEPOIS do shorthand `animation` de propósito:
+         o shorthand reseta animation-timeline para `normal`. */
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
+    }
+  }
+
+  /* Fallback para navegadores sem scroll-driven animations: o componente
+     Reveal usa useInView e aplica data-inview="true" via JS. */
+  @supports not (animation-timeline: view()) {
+    .reveal[data-inview='false'] {
+      opacity: 0;
+      translate: 0 1.5rem;
+    }
+
+    .reveal[data-inview='true'] {
+      opacity: 1;
+      translate: 0 0;
+      transition:
+        opacity 0.6s ease-out,
+        translate 0.6s ease-out;
+    }
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    translate: 0 1.5rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* Ken Burns do hero — zoom lento e contínuo sobre a imagem já carregada. */
+@media (prefers-reduced-motion: no-preference) {
+  .ken-burns {
+    animation: ken-burns 25s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.08) translate(-1%, -1%);
+  }
+}
+
+/*
+ * Letreiro/marquee dos serviços (direita → esquerda), contínuo. Cada metade
+ * da trilha repete a lista de serviços 8x (ver REPETICOES_POR_METADE em
+ * ServiceMarquee.tsx) para garantir que uma metade sozinha já seja mais
+ * larga que qualquer viewport — sem isso, em telas largas sobrava um vão
+ * vazio entre um ciclo e o próximo. A duração (176s) é 8x a duração original
+ * (22s) para manter a mesma velocidade de rolagem agora que o conteúdo é 8x
+ * maior; se parecer rápido/lento demais, ajuste os dois em conjunto.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee 176s linear infinite;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

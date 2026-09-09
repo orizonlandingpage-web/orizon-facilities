@@ -1,0 +1,14 @@
+# Build (Vite / Node)
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vscode/*
+!.vscode/extensions.json
+
+# Ferramentas de desenvolvimento local — não fazem parte do produto entregue
+.claude/
+.claude-plugin/
+.mcp.json
+CLAUDE.md
+PROMPT.md
