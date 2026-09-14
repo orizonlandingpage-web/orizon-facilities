@@ -61,6 +61,10 @@ controle de acesso (relevante juridicamente — ver Lei nº 14.967/2024), consul
 O projeto está configurado para deploy estático na **Vercel** (`vercel.json`): headers de
 segurança (CSP, HSTS, anti-clickjacking) e `Cache-Control` para os assets de build.
 
+GA4 e GTM estão instalados com **Google Consent Mode v2** — só coletam dado depois que o
+visitante aceita o banner de cookies. Ver `src/lib/analytics.ts` e a seção "Analytics e
+consentimento" em `docs/ARQUITETURA.md`.
+
 ## Antes de publicar
 
 Há dados de placeholder que precisam ser substituídos pelos dados reais da empresa antes do

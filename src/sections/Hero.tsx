@@ -1,5 +1,6 @@
 import { site } from '../config/site';
 import { buildWhatsAppLink } from '../lib/whatsapp';
+import { trackWhatsAppClick } from '../lib/analytics';
 import { ServiceMarquee } from '../components/ServiceMarquee';
 
 /**
@@ -88,6 +89,7 @@ export function Hero() {
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick('hero')}
                 className="rounded-lg border border-offwhite/30 px-5 py-2.5 font-display text-sm
                   font-bold text-offwhite transition-colors hover:border-offwhite
                   hover:bg-offwhite/10 focus-visible:outline focus-visible:outline-2

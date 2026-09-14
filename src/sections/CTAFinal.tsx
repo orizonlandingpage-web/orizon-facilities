@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { site } from '../config/site';
 import { buildWhatsAppLink, montarMensagemContato } from '../lib/whatsapp';
+import { trackWhatsAppClick } from '../lib/analytics';
 
 /**
  * Formulário de 4 campos que NÃO envia nada a um backend — monta a
@@ -16,6 +17,7 @@ export function CTAFinal() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const mensagem = montarMensagemContato({ nome, condominio, servico });
+    trackWhatsAppClick('formulario');
     window.open(buildWhatsAppLink(mensagem), '_blank', 'noopener,noreferrer');
   }
 

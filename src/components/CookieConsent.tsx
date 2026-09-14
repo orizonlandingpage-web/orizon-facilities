@@ -7,9 +7,11 @@ import { getStoredConsent, setStoredConsent, type CookieConsent } from '../lib/c
  * peso visual do "Aceitar" — consentimento não pode ser mais difícil de
  * negar do que de dar.
  *
- * Hoje o site não carrega nenhum script de analytics/rastreamento; o texto
- * reflete isso. Se um script desse tipo for adicionado no futuro, ele só
- * deve carregar depois de `getStoredConsent() === 'accepted'`.
+ * GA4 e GTM (src/lib/analytics.ts) usam Google Consent Mode v2: os scripts
+ * carregam sempre, mas com todo sinal de análise/publicidade em `denied`
+ * até o visitante responder aqui. `setStoredConsent()` dispara
+ * `subscribeToConsentChange()`, que atualiza o consentimento em tempo real
+ * sem precisar recarregar a página.
  */
 export function CookieConsentBanner() {
   const [visible, setVisible] = useState(() => getStoredConsent() === null);
@@ -28,11 +30,13 @@ export function CookieConsentBanner() {
       className="fixed inset-x-0 bottom-0 z-50 border-t border-gold/20 bg-navy px-4 py-3 sm:px-8
         sm:py-5"
     >
-      <div className="mx-auto flex max-w-6xl flex-col items-start gap-3 sm:flex-row sm:items-center
-        sm:justify-between sm:gap-4">
+      <div
+        className="mx-auto flex max-w-6xl flex-col items-start gap-3 sm:flex-row sm:items-center
+        sm:justify-between sm:gap-4"
+      >
         <p className="text-xs text-graymid sm:text-sm">
-          Usamos cookies essenciais e, com sua autorização, cookies de análise de uso, conforme a
-          LGPD.
+          Usamos cookies essenciais e, com sua autorização, cookies de análise e publicidade,
+          conforme a LGPD.
         </p>
 
         <div className="flex w-full shrink-0 gap-3 sm:w-auto">

@@ -35,4 +35,13 @@ export const site = {
   // ProfessionalService — mantém a mensagem de venda idêntica em todo canal.
   descricaoCurta:
     'Limpeza, portaria, manutenção predial e jardinagem para condomínios em Aracaju e região. Escala 100% coberta e conformidade trabalhista auditada todo mês.',
+
+  // IDs de medição (Google). O GTM é a camada principal — tags novas entram
+  // pela interface do Google, sem deploy; o GA4 está aqui porque foi
+  // entregue como gtag.js. Ver src/lib/analytics.ts para o Consent Mode v2
+  // que envolve os dois.
+  analytics: {
+    ga4: 'G-R8Z1FTG2TG',
+    gtm: 'GTM-TDS78GG3',
+  },
 } as const;

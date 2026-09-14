@@ -58,11 +58,27 @@ Tipografia: **Sora** (`--font-display`, títulos) e **Archivo** (`--font-body`, 
   maior resolução ficam em `assets-originais/` (fora de `public/`, não vão para o build). O
   hero é o elemento de LCP da página — tem preload dedicado em `index.html`. Ver
   `docs/CREDITOS-IMAGENS.md` para a origem de cada imagem.
-- **Deploy (Vercel)** — `vercel.json` define headers de segurança (CSP restritiva, já que o
-  site não carrega nada de terceiro; X-Frame-Options; HSTS) e `Cache-Control` explícito, já
-  que a Vercel não garante cache longo automático para build do Vite como garante para
-  Next.js: `immutable` para `/assets/*` (hash no nome, gerado a cada build) e cache curto com
-  revalidação para `/images/*` (nomes fixos).
+- **Deploy (Vercel)** — `vercel.json` define headers de segurança (CSP; X-Frame-Options; HSTS)
+  e `Cache-Control` explícito, já que a Vercel não garante cache longo automático para build
+  do Vite como garante para Next.js: `immutable` para `/assets/*` (hash no nome, gerado a cada
+  build) e cache curto com revalidação para `/images/*` (nomes fixos). A CSP libera só os
+  hosts do Google necessários para analytics (ver bullet abaixo) — qualquer script de
+  terceiro novo precisa de uma entrada explícita em `script-src`/`connect-src`/etc., já que
+  não há `'unsafe-inline'`.
+- **Analytics e consentimento** — GA4 e GTM (`src/config/site.ts` → `site.analytics`) são
+  inicializados por `src/lib/analytics.ts`, chamado uma vez em `src/main.tsx`, usando
+  **Google Consent Mode v2**: os scripts sempre carregam, mas com todo sinal
+  (`ad_storage`/`ad_user_data`/`ad_personalization`/`analytics_storage`) em `denied` até o
+  visitante responder ao banner de cookies (`src/components/CookieConsent.tsx`). A resposta
+  do banner propaga em tempo real via `subscribeToConsentChange()`
+  (`src/lib/cookieConsent.ts`) — o mesmo hook que o `WhatsAppFab` já usava para se esconder
+  enquanto o banner não foi respondido. O script principal do GTM/GA4 é injetado via
+  `document.createElement('script')` dentro do bundle (não como `<script>` inline no HTML) de
+  propósito: a CSP não tem `'unsafe-inline'`, então qualquer tag colada direto no `index.html`
+  seria bloqueada em produção. O `<noscript>` do GTM entra pelo mesmo plugin
+  `transformIndexHtml` de `vite.config.ts` que já injeta o JSON-LD. `trackWhatsAppClick()`
+  dispara o evento `contato_whatsapp` nos 4 pontos de conversão (Header, Hero, WhatsAppFab,
+  formulário do CTAFinal) — a única conversão real do site, sem página de obrigado.
 
 ## ⚠️ Restrição de conteúdo — não óbvia no código
 
