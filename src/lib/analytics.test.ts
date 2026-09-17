@@ -16,14 +16,16 @@ beforeEach(() => {
 });
 
 describe('initAnalytics', () => {
-  it('registra o consentimento negado por padrão antes de configurar o GA4', () => {
+  it('registra o consentimento negado por padrão antes de iniciar o GTM', () => {
     initAnalytics();
 
     const indiceDefault = comandos().findIndex((c) => c[0] === 'consent' && c[1] === 'default');
-    const indiceConfig = comandos().findIndex((c) => c[0] === 'config');
+    const indiceGtmStart = window.dataLayer.findIndex(
+      (item) => typeof item === 'object' && item !== null && 'gtm.start' in item,
+    );
 
     expect(indiceDefault).toBeGreaterThanOrEqual(0);
-    expect(indiceConfig).toBeGreaterThan(indiceDefault);
+    expect(indiceGtmStart).toBeGreaterThan(indiceDefault);
     expect(comandos()[indiceDefault][2]).toMatchObject({
       ad_storage: 'denied',
       ad_user_data: 'denied',
@@ -32,12 +34,12 @@ describe('initAnalytics', () => {
     });
   });
 
-  it('injeta o script do gtag.js com o ID do GA4 e o do gtm.js com o ID do container', () => {
+  it('injeta só o script do gtm.js — GA4 não carrega gtag.js direto (evita duplicidade)', () => {
     initAnalytics();
 
     const srcs = Array.from(document.querySelectorAll('script')).map((s) => s.src);
-    expect(srcs.some((src) => src.includes('gtag/js?id=G-R8Z1FTG2TG'))).toBe(true);
     expect(srcs.some((src) => src.includes('gtm.js?id=GTM-TDS78GG3'))).toBe(true);
+    expect(srcs.some((src) => src.includes('gtag/js'))).toBe(false);
   });
 
   it('se o visitante já aceitou antes, atualiza o consentimento para granted já na inicialização', () => {

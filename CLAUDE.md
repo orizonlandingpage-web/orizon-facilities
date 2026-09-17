@@ -42,12 +42,19 @@ npx vitest run src/lib/whatsapp.test.ts        # um arquivo
 npx vitest run -t "rejeita número muito curto"  # um `it` pelo nome
 ```
 
+O ambiente padrão do Vitest é `node` (sem `jsdom` global). Teste que toca DOM/`window`
+precisa optar por arquivo com `// @vitest-environment jsdom` na primeira linha — ver
+`src/lib/analytics.test.ts`.
+
 ## Convenções
 
 - **Branches:** `feat/<slice>-<short-desc>`, `fix/<short-desc>`, `chore/<short-desc>`
 - **Commits:** Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`)
 - **PRs:** Sempre referencie a issue, descreva o "porquê", não só o "o quê"
 - **Tests:** TDD onde a complexidade pede; testes lêem como spec
+- `.claude/`, `.claude-plugin/`, `.mcp.json` e este `CLAUDE.md` estão no `.gitignore`
+  *e* rastreados à força (`git add -f`) — arquivo **novo** nessas pastas (skill, hook)
+  precisa do mesmo `git add -f`, senão `git add` normal o ignora em silêncio.
 
 ## Quando pedir ajuda
 
@@ -57,7 +64,9 @@ npx vitest run -t "rejeita número muito curto"  # um `it` pelo nome
   `frontend-ui-engineering` (a11y/responsividade/produção).
 - Para features novas ou requisitos ambíguos: invoque `spec-driven-development`
   antes de codar.
-- Para commitar: invoque a skill `commit` (nunca dá push sozinha).
+- Para commitar: quem dispara é o usuário, com `/commit` (a skill tem
+  `disable-model-invocation: true`, então você não consegue invocá-la sozinho).
+  Não commite nem dê push por conta própria.
 - Para regras determinísticas (formatação, secrets, comandos perigosos): já há hooks rodando.
 
 ## O que NÃO fazer
@@ -70,4 +79,11 @@ npx vitest run -t "rejeita número muito curto"  # um `it` pelo nome
   `text-graytext`).
 - Não hardcodar telefone/WhatsApp/CNPJ/números fora de `src/config/site.ts`.
 - Não adicionar deps sem rodar audit primeiro.
+- Não adicionar API de browser (`window`, `document`) ou import de CSS/asset em
+  `src/config/site.ts`, `src/config/faq.ts` ou `src/lib/structured-data.ts` — o
+  `vite.config.ts` os importa em contexto Node para gerar o JSON-LD e o `<noscript>`
+  do GTM (ver `docs/ARQUITETURA.md`); quebra `npm run dev`/`npm run build` no
+  carregamento da config.
+- Não formatar código à mão: o hook `post-edit-format.sh` já roda prettier + eslint
+  --fix após cada Write/Edit e devolve erro pra corrigir se o lint falhar.
 - Não duplicar em `CLAUDE.md` o que já está em `docs/ARQUITETURA.md` — atualize lá.
