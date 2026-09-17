@@ -51,6 +51,12 @@ Tipografia: **Sora** (`--font-display`, títulos) e **Archivo** (`--font-body`, 
   `<script type="application/ld+json">` próprio). As perguntas do FAQ vivem em
   `src/config/faq.ts`, consumidas pelos dois. `public/robots.txt` e `public/sitemap.xml`
   têm o domínio (`site.url`) escrito literalmente — atualizar junto se ele mudar.
+  `vite.config.ts` importa `structured-data.ts`, `site.ts` e `faq.ts` direto no topo do
+  arquivo — ou seja, esses três módulos são avaliados **em Node, antes de `vite build`
+  rodar**, para gerar o JSON-LD e o `<noscript>` do GTM via `transformIndexHtml`.
+  Invariante: eles não podem referenciar `window`/`document` nem importar CSS/asset no
+  escopo do módulo — isso quebra `npm run dev` e `npm run build` já no carregamento da
+  config, com um erro que não aponta pra causa óbvia.
 - `src/components/WhatsAppFab.tsx` só renderiza depois que o hero (`#topo`) sai da viewport,
   para não sobrepor o CTA do próprio hero em telas baixas. `Footer` tem padding extra para não
   cobrir o último elemento focável (WCAG 2.4.11).
@@ -65,20 +71,29 @@ Tipografia: **Sora** (`--font-display`, títulos) e **Archivo** (`--font-body`, 
   hosts do Google necessários para analytics (ver bullet abaixo) — qualquer script de
   terceiro novo precisa de uma entrada explícita em `script-src`/`connect-src`/etc., já que
   não há `'unsafe-inline'`.
-- **Analytics e consentimento** — GA4 e GTM (`src/config/site.ts` → `site.analytics`) são
-  inicializados por `src/lib/analytics.ts`, chamado uma vez em `src/main.tsx`, usando
-  **Google Consent Mode v2**: os scripts sempre carregam, mas com todo sinal
+- **Analytics e consentimento** — só o GTM (`src/config/site.ts` → `site.analytics.gtm`) é
+  carregado por código, em `src/lib/analytics.ts`, chamado uma vez em `src/main.tsx`, usando
+  **Google Consent Mode v2**: o script sempre carrega, mas com todo sinal
   (`ad_storage`/`ad_user_data`/`ad_personalization`/`analytics_storage`) em `denied` até o
-  visitante responder ao banner de cookies (`src/components/CookieConsent.tsx`). A resposta
-  do banner propaga em tempo real via `subscribeToConsentChange()`
+  visitante responder ao banner de cookies (`src/components/CookieConsent.tsx`). O GA4
+  (`G-R8Z1FTG2TG`) **não** tem `gtag.js` próprio no código — é uma tag de configuração dentro
+  do container GTM, que lê o mesmo `dataLayer`; carregar o gtag.js do GA4 direto também
+  duplicaria os hits que essa tag já envia. Se o GA4 precisar ser depurado fora do GTM (ex.:
+  Tag Assistant), inspecione a tag dentro do container `GTM-TDS78GG3`, não o código-fonte. A
+  resposta do banner propaga em tempo real via `subscribeToConsentChange()`
   (`src/lib/cookieConsent.ts`) — o mesmo hook que o `WhatsAppFab` já usava para se esconder
-  enquanto o banner não foi respondido. O script principal do GTM/GA4 é injetado via
+  enquanto o banner não foi respondido. O script do GTM é injetado via
   `document.createElement('script')` dentro do bundle (não como `<script>` inline no HTML) de
   propósito: a CSP não tem `'unsafe-inline'`, então qualquer tag colada direto no `index.html`
   seria bloqueada em produção. O `<noscript>` do GTM entra pelo mesmo plugin
   `transformIndexHtml` de `vite.config.ts` que já injeta o JSON-LD. `trackWhatsAppClick()`
   dispara o evento `contato_whatsapp` nos 4 pontos de conversão (Header, Hero, WhatsAppFab,
   formulário do CTAFinal) — a única conversão real do site, sem página de obrigado.
+- **Testes** — não há `vitest.config.ts`; o ambiente padrão do Vitest é `node`. Teste
+  que toca `window`/DOM opta por `jsdom` só no próprio arquivo, via
+  `// @vitest-environment jsdom` na primeira linha (`src/lib/analytics.test.ts`).
+  `src/lib/whatsapp.test.ts` cobre o único fluxo com lógica de negócio real do site;
+  `src/lib/structured-data.test.ts` é o que trava a restrição de vocabulário abaixo.
 
 ## ⚠️ Restrição de conteúdo — não óbvia no código
 

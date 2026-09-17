@@ -37,11 +37,12 @@ function atualizarConsentimento(concedido: boolean): void {
 }
 
 /**
- * Inicializa GA4 + GTM com Google Consent Mode v2: por padrão, tudo negado
+ * Inicializa o GTM com Google Consent Mode v2: por padrão, tudo negado
  * (nenhum cookie de análise/publicidade é gravado) até o visitante responder
  * ao banner de cookies (src/components/CookieConsent.tsx). A ordem das
- * chamadas importa — o default de consentimento precisa existir antes de
- * qualquer script do Google carregar.
+ * chamadas importa — o default de consentimento precisa existir antes do
+ * script do GTM carregar. O GA4 não tem script próprio aqui: é uma tag
+ * configurada dentro do container GTM, que lê o mesmo `dataLayer`.
  */
 export function initAnalytics(): void {
   window.dataLayer = window.dataLayer || [];
@@ -59,10 +60,6 @@ export function initAnalytics(): void {
   if (getStoredConsent() === 'accepted') {
     atualizarConsentimento(true);
   }
-
-  gtag('js', new Date());
-  gtag('config', site.analytics.ga4);
-  carregarScript(`https://www.googletagmanager.com/gtag/js?id=${site.analytics.ga4}`);
 
   window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
   carregarScript(`https://www.googletagmanager.com/gtm.js?id=${site.analytics.gtm}`);

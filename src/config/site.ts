@@ -36,12 +36,11 @@ export const site = {
   descricaoCurta:
     'Limpeza, portaria, manutenção predial e jardinagem para condomínios em Aracaju e região. Escala 100% coberta e conformidade trabalhista auditada todo mês.',
 
-  // IDs de medição (Google). O GTM é a camada principal — tags novas entram
-  // pela interface do Google, sem deploy; o GA4 está aqui porque foi
-  // entregue como gtag.js. Ver src/lib/analytics.ts para o Consent Mode v2
-  // que envolve os dois.
+  // ID do container GTM — único script do Google carregado direto pelo código.
+  // O GA4 (G-R8Z1FTG2TG) é uma tag configurada dentro do próprio container,
+  // não em código: carregar o gtag.js do GA4 direto aqui duplicaria os hits
+  // que a tag do GTM já envia. Ver src/lib/analytics.ts para o Consent Mode v2.
   analytics: {
-    ga4: 'G-R8Z1FTG2TG',
     gtm: 'GTM-TDS78GG3',
   },
 } as const;
