@@ -71,22 +71,27 @@ Tipografia: **Sora** (`--font-display`, títulos) e **Archivo** (`--font-body`, 
   hosts do Google necessários para analytics (ver bullet abaixo) — qualquer script de
   terceiro novo precisa de uma entrada explícita em `script-src`/`connect-src`/etc., já que
   não há `'unsafe-inline'`.
-- **Analytics e consentimento** — só o GTM (`src/config/site.ts` → `site.analytics.gtm`) é
-  carregado por código, em `src/lib/analytics.ts`, chamado uma vez em `src/main.tsx`, usando
-  **Google Consent Mode v2**: o script sempre carrega, mas com todo sinal
-  (`ad_storage`/`ad_user_data`/`ad_personalization`/`analytics_storage`) em `denied` até o
-  visitante responder ao banner de cookies (`src/components/CookieConsent.tsx`). O GA4
-  (`G-R8Z1FTG2TG`) **não** tem `gtag.js` próprio no código — é uma tag de configuração dentro
-  do container GTM, que lê o mesmo `dataLayer`; carregar o gtag.js do GA4 direto também
-  duplicaria os hits que essa tag já envia. Se o GA4 precisar ser depurado fora do GTM (ex.:
-  Tag Assistant), inspecione a tag dentro do container `GTM-TDS78GG3`, não o código-fonte. A
-  resposta do banner propaga em tempo real via `subscribeToConsentChange()`
-  (`src/lib/cookieConsent.ts`) — o mesmo hook que o `WhatsAppFab` já usava para se esconder
-  enquanto o banner não foi respondido. O script do GTM é injetado via
-  `document.createElement('script')` dentro do bundle (não como `<script>` inline no HTML) de
-  propósito: a CSP não tem `'unsafe-inline'`, então qualquer tag colada direto no `index.html`
-  seria bloqueada em produção. O `<noscript>` do GTM entra pelo mesmo plugin
-  `transformIndexHtml` de `vite.config.ts` que já injeta o JSON-LD. `trackWhatsAppClick()`
+- **Analytics e consentimento** — o default de consentimento e o carregamento do GTM
+  acontecem em **`public/consent-init.js`**, um `<script>` clássico (sem `type="module"`,
+  sem `async`/`defer`) referenciado em `index.html` — precisa ser o primeiro `<script>` do
+  `<head>` que roda antes do bundle React, porque `<script type="module">` (como
+  `src/main.tsx`) tem semântica `defer` e o Google Tag Manager precisa enxergar o
+  `gtag('consent', 'default', ...)` de forma síncrona (confirmado via Google Tag
+  Assistant — sem isso, o GTM processa o consentimento como implícito mesmo com o comando
+  presente no `dataLayer`). Não é `<script>` inline: a CSP não tem `'unsafe-inline'` (ver
+  `vercel.json`), então tem que ser um arquivo estático de mesma origem (`'self'`), não
+  processado pelo build/TypeScript — por isso o ID do GTM e a chave de consentimento
+  (`orizon-cookie-consent`) estão hardcoded nesse arquivo, replicando `site.analytics.gtm`
+  (`src/config/site.ts`) e a `STORAGE_KEY` de `src/lib/cookieConsent.ts`. Os três lados
+  são checados por teste (`src/lib/consent-init.test.ts`) — atualizar os três juntos se
+  algum desses valores mudar. O GA4 (`G-R8Z1FTG2TG`) **não** tem `gtag.js` próprio: é uma
+  tag de configuração dentro do container GTM, que lê o mesmo `dataLayer`. `src/lib/analytics.ts`
+  (chamado em `src/main.tsx`) só cuida da resposta ao banner de cookies
+  (`src/components/CookieConsent.tsx`) **em tempo real**, propagada via
+  `subscribeToConsentChange()` (`src/lib/cookieConsent.ts`) — o mesmo hook que o
+  `WhatsAppFab` já usava para se esconder enquanto o banner não foi respondido. O
+  `<noscript>` do GTM entra pelo plugin `transformIndexHtml` de `vite.config.ts`, que
+  também injeta o JSON-LD. `trackWhatsAppClick()`
   dispara o evento `contato_whatsapp` nos 4 pontos de conversão (Header, Hero, WhatsAppFab,
   formulário do CTAFinal) — a única conversão real do site, sem página de obrigado.
 - **Testes** — não há `vitest.config.ts`; o ambiente padrão do Vitest é `node`. Teste

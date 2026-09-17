@@ -47,6 +47,11 @@
       content="Limpeza, portaria, manutenção predial e jardinagem para condomínios em Aracaju e região. Escala 100% coberta e conformidade trabalhista auditada todo mês."
     />
     <meta name="twitter:image" content="https://orizonfacilities.com.br/images/hero-1600.webp" />
+
+    <!-- Script clássico (não type="module"), síncrono, mesma origem — precisa
+         rodar antes do bundle React para o GTM processar o consent default
+         de forma síncrona. Ver public/consent-init.js e docs/ARQUITETURA.md. -->
+    <script src="/consent-init.js"></script>
   </head>
   <body>
     <div id="root"></div>

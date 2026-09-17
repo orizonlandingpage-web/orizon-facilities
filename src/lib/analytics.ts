@@ -1,4 +1,3 @@
-import { site } from '../config/site';
 import { getStoredConsent, subscribeToConsentChange } from './cookieConsent';
 
 declare global {
@@ -19,13 +18,6 @@ function gtag(...args: unknown[]): void {
   window.dataLayer.push(args);
 }
 
-function carregarScript(src: string): void {
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = src;
-  document.head.appendChild(script);
-}
-
 function atualizarConsentimento(concedido: boolean): void {
   const status = concedido ? 'granted' : 'denied';
   gtag('consent', 'update', {
@@ -37,32 +29,19 @@ function atualizarConsentimento(concedido: boolean): void {
 }
 
 /**
- * Inicializa o GTM com Google Consent Mode v2: por padrão, tudo negado
- * (nenhum cookie de análise/publicidade é gravado) até o visitante responder
- * ao banner de cookies (src/components/CookieConsent.tsx). A ordem das
- * chamadas importa — o default de consentimento precisa existir antes do
- * script do GTM carregar. O GA4 não tem script próprio aqui: é uma tag
- * configurada dentro do container GTM, que lê o mesmo `dataLayer`.
+ * Só cuida da resposta ao banner de cookies em tempo real. O default de
+ * consentimento e o carregamento do GTM já rodaram antes disso — em
+ * public/consent-init.js, um <script> clássico (síncrono, sem type="module")
+ * no <head> de index.html, carregado antes do bundle React. Precisa ser
+ * assim para o GTM processar o consent default de forma síncrona (ver
+ * docs/ARQUITETURA.md). Se o visitante já tinha aceitado antes,
+ * consent-init.js já restaurou o consentimento; o check abaixo é só
+ * redundância defensiva caso esse script não rode por algum motivo.
  */
 export function initAnalytics(): void {
-  window.dataLayer = window.dataLayer || [];
-
-  gtag('consent', 'default', {
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
-    analytics_storage: 'denied',
-    security_storage: 'granted',
-    wait_for_update: 500,
-  });
-  gtag('set', 'ads_data_redaction', true);
-
   if (getStoredConsent() === 'accepted') {
     atualizarConsentimento(true);
   }
-
-  window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
-  carregarScript(`https://www.googletagmanager.com/gtm.js?id=${site.analytics.gtm}`);
 
   subscribeToConsentChange(() => atualizarConsentimento(getStoredConsent() === 'accepted'));
 }
