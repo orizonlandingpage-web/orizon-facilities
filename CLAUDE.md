@@ -46,6 +46,11 @@ O ambiente padrão do Vitest é `node` (sem `jsdom` global). Teste que toca DOM/
 precisa optar por arquivo com `// @vitest-environment jsdom` na primeira linha — ver
 `src/lib/analytics.test.ts`.
 
+`public/consent-init.js` não é coberto por eslint (0 regras — o bloco de config só se
+aplica a `**/*.{ts,tsx}`) nem por `tsc` (fora do `include` de ambos os `tsconfig.*.json`).
+Depois de editá-lo, `npm run test` é a única verificação que vale — ela roda o script de
+verdade via `src/lib/consent-init.test.ts`.
+
 ## Convenções
 
 - **Branches:** `feat/<slice>-<short-desc>`, `fix/<short-desc>`, `chore/<short-desc>`
@@ -77,7 +82,14 @@ precisa optar por arquivo com `// @vitest-environment jsdom` na primeira linha �
   já bloqueia isso no lint).
 - Não hardcodar hex no JSX — use as classes do tema (`bg-navy`, `text-gold`, `text-gold-text`,
   `text-graytext`).
-- Não hardcodar telefone/WhatsApp/CNPJ/números fora de `src/config/site.ts`.
+- Não hardcodar telefone/WhatsApp/CNPJ/números fora de `src/config/site.ts` — **única
+  exceção:** `public/consent-init.js`, que é estático (não passa pelo bundler, não pode
+  `import`) e por isso repete o ID do GTM e a chave de consentimento. Não "corrija" isso;
+  a sincronia é travada por `src/lib/consent-init.test.ts`.
+- Não transformar `public/consent-init.js` em módulo do bundle, não adicionar
+  `type="module"`/`async`/`defer` na tag dele em `index.html`, e não colar `<script>`
+  inline no HTML (a CSP não tem `'unsafe-inline'` — ver `vercel.json`). Ver
+  `docs/ARQUITETURA.md`.
 - Não adicionar deps sem rodar audit primeiro.
 - Não adicionar API de browser (`window`, `document`) ou import de CSS/asset em
   `src/config/site.ts`, `src/config/faq.ts` ou `src/lib/structured-data.ts` — o
