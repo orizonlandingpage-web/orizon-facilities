@@ -1,6 +1,6 @@
 import { site } from '../config/site';
 import { buildWhatsAppLink } from '../lib/whatsapp';
-import { trackWhatsAppClick } from '../lib/analytics';
+import { trackClickToCall } from '../lib/analytics';
 
 /**
  * Cabeçalho fixo simples: wordmark + telefone visível + CTA de WhatsApp.
@@ -39,6 +39,7 @@ export function Header() {
         <div className="flex items-center gap-4">
           <a
             href={`tel:${site.telefone.replace(/\D/g, '')}`}
+            onClick={() => trackClickToCall()}
             className="hidden font-body text-sm text-graytext hover:text-navy sm:block"
           >
             {site.telefone}
@@ -47,7 +48,6 @@ export function Header() {
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackWhatsAppClick('header')}
             className="rounded-lg bg-gold px-5 py-2.5 font-display text-sm font-bold text-navy
               transition-colors hover:bg-gold-text hover:text-offwhite focus-visible:outline
               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy"

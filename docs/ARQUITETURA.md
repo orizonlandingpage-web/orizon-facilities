@@ -80,25 +80,45 @@ Tipografia: **Sora** (`--font-display`, títulos) e **Archivo** (`--font-body`, 
   Assistant — sem isso, o GTM processa o consentimento como implícito mesmo com o comando
   presente no `dataLayer`). Não é `<script>` inline: a CSP não tem `'unsafe-inline'` (ver
   `vercel.json`), então tem que ser um arquivo estático de mesma origem (`'self'`), não
-  processado pelo build/TypeScript — por isso o ID do GTM e a chave de consentimento
-  (`orizon-cookie-consent`) estão hardcoded nesse arquivo, replicando `site.analytics.gtm`
-  (`src/config/site.ts`) e a `STORAGE_KEY` de `src/lib/cookieConsent.ts`. Os três lados
-  são checados por teste (`src/lib/consent-init.test.ts`) — atualizar os três juntos se
-  algum desses valores mudar. O GA4 (`G-R8Z1FTG2TG`) **não** tem `gtag.js` próprio: é uma
-  tag de configuração dentro do container GTM, que lê o mesmo `dataLayer`. `src/lib/analytics.ts`
-  (chamado em `src/main.tsx`) só cuida da resposta ao banner de cookies
+  processado pelo build/TypeScript — por isso o ID do GTM e a chave/formato de
+  consentimento (`orizon-cookie-consent`, JSON `{ analytics: boolean, ads: boolean }`)
+  estão replicados à mão nesse arquivo, batendo com `site.analytics.gtm`
+  (`src/config/site.ts`) e o tipo `ConsentPreferences`/`STORAGE_KEY` de
+  `src/lib/cookieConsent.ts`. Os três lados são checados por teste
+  (`src/lib/consent-init.test.ts`) — atualizar os três juntos se algum desses valores
+  mudar. O GA4 (`G-VGHZQPR2RB`) **não** tem `gtag.js` próprio: é uma tag de configuração
+  dentro do container GTM, que lê o mesmo `dataLayer`. `src/lib/analytics.ts` (chamado em
+  `src/main.tsx`) só cuida da resposta ao banner de cookies
   (`src/components/CookieConsent.tsx`) **em tempo real**, propagada via
   `subscribeToConsentChange()` (`src/lib/cookieConsent.ts`) — o mesmo hook que o
   `WhatsAppFab` já usava para se esconder enquanto o banner não foi respondido. O
   `<noscript>` do GTM entra pelo plugin `transformIndexHtml` de `vite.config.ts`, que
-  também injeta o JSON-LD. `trackWhatsAppClick()`
-  dispara o evento `contato_whatsapp` nos 4 pontos de conversão (Header, Hero, WhatsAppFab,
-  formulário do CTAFinal) — a única conversão real do site, sem página de obrigado.
+  também injeta o JSON-LD.
+
+  O consentimento é granular por categoria (Análise / Publicidade), não binário — o
+  banner tem um segundo passo "Personalizar" com um checkbox por categoria, e um botão
+  "Preferências de cookies" no `Footer` reabre o banner a qualquer momento (dispara
+  `abrirPreferenciasDeCookies()`/`subscribeToOpenPreferences()` de `cookieConsent.ts`).
+
+  Os únicos eventos de conversão disparados **pelo código** são `generate_lead_form()`
+  (formulário do `CTAFinal`, logo antes do `window.open()` que abre o WhatsApp — sem
+  nenhum dado pessoal do formulário no payload) e `click_to_call` (cliques em `tel:`, no
+  `Header` e no `Footer`). Os 3 CTAs que são links diretos de WhatsApp (`Header`, `Hero`,
+  `WhatsAppFab`) **não** disparam nada pelo código — o GTM já captura esses cliques
+  sozinho, nativamente, pelo gatilho de "clique em link" configurado no container para
+  URLs contendo `wa.me`, como evento `generate_lead_whatsapp`. Isso só funciona porque são
+  `<a href="wa.me/...">` de verdade; o formulário abre o WhatsApp via `window.open()`
+  programático — sem `<a>` sendo clicado —, por isso só ele precisa do evento manual.
+  Reintroduzir um evento de clique nesses 3 links duplicaria a conversão que o GTM já
+  registra.
 - **Testes** — não há `vitest.config.ts`; o ambiente padrão do Vitest é `node`. Teste
   que toca `window`/DOM opta por `jsdom` só no próprio arquivo, via
   `// @vitest-environment jsdom` na primeira linha (`src/lib/analytics.test.ts`).
   `src/lib/whatsapp.test.ts` cobre o único fluxo com lógica de negócio real do site;
   `src/lib/structured-data.test.ts` é o que trava a restrição de vocabulário abaixo.
+  `src/lib/consent-init.test.ts` é a única rede de proteção de `public/consent-init.js`
+  (fora do `include` de eslint e `tsc`, ver `CLAUDE.md`): executa o script estático de
+  verdade via `new Function()` em jsdom e confere a ordem dos `<script>` em `index.html`.
 
 ## ⚠️ Restrição de conteúdo — não óbvia no código
 

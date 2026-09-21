@@ -1,4 +1,6 @@
 import { site } from '../config/site';
+import { trackClickToCall } from '../lib/analytics';
+import { abrirPreferenciasDeCookies } from '../lib/cookieConsent';
 
 /**
  * pb-24 compensa a altura do WhatsAppFab (56px + margens) para que ele nunca
@@ -19,7 +21,11 @@ export function Footer() {
           <p>Atendemos condomínios em {site.regiaoAtendida.join(', ')}.</p>
           <p>CNPJ {site.cnpj}</p>
           <p>
-            <a href={`tel:${site.telefone.replace(/\D/g, '')}`} className="hover:text-offwhite">
+            <a
+              href={`tel:${site.telefone.replace(/\D/g, '')}`}
+              onClick={() => trackClickToCall()}
+              className="hover:text-offwhite"
+            >
               {site.telefone}
             </a>
           </p>
@@ -34,6 +40,13 @@ export function Footer() {
             reprovava contraste AA sobre navy (3,23:1, medido com axe-core). */}
         <div className="mt-10 border-t border-graymid/20 pt-6 text-xs text-graymid">
           <p>&copy; {new Date().getFullYear()} Orizon Facilities. Todos os direitos reservados.</p>
+          <button
+            type="button"
+            onClick={() => abrirPreferenciasDeCookies()}
+            className="mt-2 underline decoration-graymid/40 underline-offset-2 hover:text-offwhite"
+          >
+            Preferências de cookies
+          </button>
         </div>
       </div>
     </footer>

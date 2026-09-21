@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from 'vitest';
-import { initAnalytics, trackWhatsAppClick } from './analytics';
+import { initAnalytics, trackClickToCall, trackLeadForm } from './analytics';
 import { setStoredConsent } from './cookieConsent';
 
 type Comando = [string, string, Record<string, string>?];
@@ -16,57 +16,91 @@ beforeEach(() => {
 });
 
 describe('initAnalytics', () => {
-  it('se o visitante já aceitou antes, atualiza o consentimento para granted já na inicialização', () => {
-    setStoredConsent('accepted');
+  it('se o visitante já respondeu antes, atualiza o consentimento granular já na inicialização', () => {
+    setStoredConsent({ analytics: true, ads: false });
     window.dataLayer = []; // setStoredConsent acima não deve gravar nada no dataLayer
 
     initAnalytics();
 
     const update = comandos().find((c) => c[0] === 'consent' && c[1] === 'update');
     expect(update?.[2]).toEqual({
-      ad_storage: 'granted',
-      ad_user_data: 'granted',
-      ad_personalization: 'granted',
       analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
     });
+  });
+
+  it('sem escolha salva, não dispara nenhum consent update na inicialização', () => {
+    initAnalytics();
+
+    expect(comandos().find((c) => c[0] === 'consent' && c[1] === 'update')).toBeUndefined();
   });
 });
 
 describe('resposta ao banner de cookies em tempo real', () => {
-  it('aceitar dispara consent update com os 4 sinais em granted', () => {
+  it('aceitar todos dispara consent update com os 4 sinais em granted', () => {
     initAnalytics();
     window.dataLayer.length = 0; // limpa o que já rodou na inicialização
 
-    setStoredConsent('accepted');
+    setStoredConsent({ analytics: true, ads: true });
 
     const update = comandos().find((c) => c[0] === 'consent' && c[1] === 'update');
     expect(update?.[2]).toEqual({
+      analytics_storage: 'granted',
       ad_storage: 'granted',
       ad_user_data: 'granted',
       ad_personalization: 'granted',
-      analytics_storage: 'granted',
     });
   });
 
-  it('recusar dispara consent update com os 4 sinais em denied', () => {
+  it('recusar tudo dispara consent update com os 4 sinais em denied', () => {
     initAnalytics();
     window.dataLayer.length = 0;
 
-    setStoredConsent('rejected');
+    setStoredConsent({ analytics: false, ads: false });
 
     const update = comandos().find((c) => c[0] === 'consent' && c[1] === 'update');
     expect(update?.[2]).toEqual({
+      analytics_storage: 'denied',
       ad_storage: 'denied',
       ad_user_data: 'denied',
       ad_personalization: 'denied',
-      analytics_storage: 'denied',
+    });
+  });
+
+  it('personalizar com só análise concede analytics_storage e nega os 3 sinais de publicidade', () => {
+    initAnalytics();
+    window.dataLayer.length = 0;
+
+    setStoredConsent({ analytics: true, ads: false });
+
+    const update = comandos().find((c) => c[0] === 'consent' && c[1] === 'update');
+    expect(update?.[2]).toEqual({
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
     });
   });
 });
 
-describe('trackWhatsAppClick', () => {
-  it('empilha o evento contato_whatsapp com a origem do clique', () => {
-    trackWhatsAppClick('hero');
-    expect(window.dataLayer).toContainEqual({ event: 'contato_whatsapp', origem: 'hero' });
+describe('trackLeadForm', () => {
+  it('empilha generate_lead_form com o canal e o nome do formulário, sem dado pessoal', () => {
+    trackLeadForm();
+
+    expect(window.dataLayer).toContainEqual({
+      event: 'generate_lead_form',
+      lead_channel: 'whatsapp',
+      form_name: 'solicitacao_proposta',
+    });
+  });
+});
+
+describe('trackClickToCall', () => {
+  it('empilha click_to_call com a localização do clique', () => {
+    trackClickToCall();
+
+    expect(window.dataLayer).toContainEqual({ event: 'click_to_call', phone_location: 'site' });
   });
 });

@@ -43,29 +43,35 @@ describe('consent-init.js', () => {
     });
   });
 
-  it('restaura consentimento concedido de uma visita anterior', () => {
-    localStorage.setItem('orizon-cookie-consent', 'accepted');
+  it('sem escolha salva, não dispara nenhum consent update', () => {
+    rodarConsentInit();
+
+    const comandos = window.dataLayer as Comando[];
+    expect(comandos.find((c) => c[0] === 'consent' && c[1] === 'update')).toBeUndefined();
+  });
+
+  it('restaura preferências granulares de uma visita anterior', () => {
+    localStorage.setItem('orizon-cookie-consent', JSON.stringify({ analytics: true, ads: false }));
 
     rodarConsentInit();
 
     const comandos = window.dataLayer as Comando[];
     const consentUpdate = comandos.find((c) => c[0] === 'consent' && c[1] === 'update');
     expect(consentUpdate?.[2]).toEqual({
-      ad_storage: 'granted',
-      ad_user_data: 'granted',
-      ad_personalization: 'granted',
       analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
     });
   });
 
-  it('não restaura nada quando o visitante recusou antes', () => {
-    localStorage.setItem('orizon-cookie-consent', 'rejected');
+  it('ignora valor salvo no formato antigo (string simples, não JSON) sem lançar erro', () => {
+    localStorage.setItem('orizon-cookie-consent', 'accepted');
 
-    rodarConsentInit();
+    expect(rodarConsentInit).not.toThrow();
 
     const comandos = window.dataLayer as Comando[];
-    const consentUpdate = comandos.find((c) => c[0] === 'consent' && c[1] === 'update');
-    expect(consentUpdate).toBeUndefined();
+    expect(comandos.find((c) => c[0] === 'consent' && c[1] === 'update')).toBeUndefined();
   });
 });
 
