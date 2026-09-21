@@ -1,12 +1,10 @@
-import { getStoredConsent, subscribeToConsentChange } from './cookieConsent';
+import { getStoredConsent, subscribeToConsentChange, type ConsentPreferences } from './cookieConsent';
 
 declare global {
   interface Window {
     dataLayer: unknown[];
   }
 }
-
-export type OrigemWhatsApp = 'header' | 'hero' | 'fab' | 'formulario';
 
 /**
  * Réplica mínima do gtag() do snippet oficial: só empilha os argumentos em
@@ -18,13 +16,14 @@ function gtag(...args: unknown[]): void {
   window.dataLayer.push(args);
 }
 
-function atualizarConsentimento(concedido: boolean): void {
-  const status = concedido ? 'granted' : 'denied';
+function atualizarConsentimento(preferencias: ConsentPreferences): void {
+  const analytics = preferencias.analytics ? 'granted' : 'denied';
+  const ads = preferencias.ads ? 'granted' : 'denied';
   gtag('consent', 'update', {
-    ad_storage: status,
-    ad_user_data: status,
-    ad_personalization: status,
-    analytics_storage: status,
+    analytics_storage: analytics,
+    ad_storage: ads,
+    ad_user_data: ads,
+    ad_personalization: ads,
   });
 }
 
@@ -34,25 +33,40 @@ function atualizarConsentimento(concedido: boolean): void {
  * public/consent-init.js, um <script> clássico (síncrono, sem type="module")
  * no <head> de index.html, carregado antes do bundle React. Precisa ser
  * assim para o GTM processar o consent default de forma síncrona (ver
- * docs/ARQUITETURA.md). Se o visitante já tinha aceitado antes,
+ * docs/ARQUITETURA.md). Se o visitante já tinha respondido antes,
  * consent-init.js já restaurou o consentimento; o check abaixo é só
  * redundância defensiva caso esse script não rode por algum motivo.
  */
 export function initAnalytics(): void {
-  if (getStoredConsent() === 'accepted') {
-    atualizarConsentimento(true);
+  const preferencias = getStoredConsent();
+  if (preferencias) {
+    atualizarConsentimento(preferencias);
   }
 
-  subscribeToConsentChange(() => atualizarConsentimento(getStoredConsent() === 'accepted'));
+  subscribeToConsentChange(() => {
+    const atuais = getStoredConsent();
+    if (atuais) atualizarConsentimento(atuais);
+  });
 }
 
 /**
- * Dispara o evento de conversão em todo clique nos CTAs de WhatsApp — a
- * única conversão real do site (sem backend, sem página de obrigado). No
- * GTM isso vira gatilho de Evento Personalizado `contato_whatsapp`, com
- * `origem` como variável de camada de dados para comparar qual CTA converte
- * mais.
+ * Dispara imediatamente antes de abrir o WhatsApp pelo formulário de contato
+ * (a única conversão do site que o gatilho nativo de "clique em link" do GTM
+ * não enxerga, porque o WhatsApp abre via `window.open()` programático, não
+ * por clique num `<a href="wa.me/...">`). Os 3 CTAs que são links diretos de
+ * WhatsApp (Header, Hero, WhatsAppFab) não disparam nada daqui — o GTM já
+ * captura esses cliques sozinho pelo gatilho de link, como `generate_lead_whatsapp`.
+ * Sem dado pessoal no payload (LGPD).
  */
-export function trackWhatsAppClick(origem: OrigemWhatsApp): void {
-  window.dataLayer.push({ event: 'contato_whatsapp', origem });
+export function trackLeadForm(): void {
+  window.dataLayer.push({
+    event: 'generate_lead_form',
+    lead_channel: 'whatsapp',
+    form_name: 'solicitacao_proposta',
+  });
+}
+
+/** Clique em qualquer link `tel:` do site — indicador secundário; a conversão de ligação em si é medida pelo Google Ads. */
+export function trackClickToCall(): void {
+  window.dataLayer.push({ event: 'click_to_call', phone_location: 'site' });
 }

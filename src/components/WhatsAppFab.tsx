@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { site } from '../config/site';
 import { buildWhatsAppLink } from '../lib/whatsapp';
-import { trackWhatsAppClick } from '../lib/analytics';
 import { getStoredConsent, subscribeToConsentChange } from '../lib/cookieConsent';
 
 /**
@@ -61,7 +60,6 @@ export function WhatsAppFab() {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={() => trackWhatsAppClick('fab')}
       aria-label="Falar com a Orizon Facilities no WhatsApp (abre em nova aba)"
       className="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-50
         flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366]

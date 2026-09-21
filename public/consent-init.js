@@ -8,10 +8,11 @@
  * default de forma síncrona, antes de qualquer bundle da aplicação rodar.
  *
  * Arquivo estático: não passa pelo build/TypeScript, por isso o ID do GTM e
- * a chave de consentimento estão hardcoded aqui, replicando
- * `site.analytics.gtm` e a STORAGE_KEY de src/lib/cookieConsent.ts. Os dois
- * lados são checados por teste (src/lib/consent-init.test.ts) — atualizar
- * os três juntos se algum desses valores mudar.
+ * a chave/formato de consentimento estão replicados aqui à mão, batendo com
+ * `site.analytics.gtm` e o tipo `ConsentPreferences`/STORAGE_KEY de
+ * src/lib/cookieConsent.ts (`{ analytics: boolean, ads: boolean }`, como
+ * JSON). Os dois lados são checados por teste (src/lib/consent-init.test.ts)
+ * — atualizar os três juntos se algum desses valores mudar.
  */
 (function () {
   var GTM_ID = 'GTM-TDS78GG3';
@@ -33,12 +34,22 @@
   });
   gtag('set', 'ads_data_redaction', true);
 
-  if (window.localStorage.getItem(CONSENT_STORAGE_KEY) === 'accepted') {
+  var preferencias = null;
+  try {
+    var salvo = JSON.parse(window.localStorage.getItem(CONSENT_STORAGE_KEY));
+    if (salvo && typeof salvo.analytics === 'boolean' && typeof salvo.ads === 'boolean') {
+      preferencias = salvo;
+    }
+  } catch (e) {
+    preferencias = null;
+  }
+
+  if (preferencias) {
     gtag('consent', 'update', {
-      ad_storage: 'granted',
-      ad_user_data: 'granted',
-      ad_personalization: 'granted',
-      analytics_storage: 'granted',
+      analytics_storage: preferencias.analytics ? 'granted' : 'denied',
+      ad_storage: preferencias.ads ? 'granted' : 'denied',
+      ad_user_data: preferencias.ads ? 'granted' : 'denied',
+      ad_personalization: preferencias.ads ? 'granted' : 'denied',
     });
   }
 

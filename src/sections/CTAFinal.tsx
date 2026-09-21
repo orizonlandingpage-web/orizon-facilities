@@ -1,13 +1,19 @@
 import { useState, type FormEvent } from 'react';
 import { site } from '../config/site';
 import { buildWhatsAppLink, montarMensagemContato } from '../lib/whatsapp';
-import { trackWhatsAppClick } from '../lib/analytics';
+import { trackLeadForm } from '../lib/analytics';
 
 /**
  * Formulário de 4 campos que NÃO envia nada a um backend — monta a
  * mensagem e abre o WhatsApp. Decisão do usuário: contato 100% estático,
  * sem servidor, sem chave de API. `preventDefault()` evita o reload da
  * página, que perderia o estado da SPA.
+ *
+ * `onSubmit` só roda depois que a validação nativa do HTML (`required` nos
+ * campos) passa — o navegador barra a submissão antes disso, então
+ * `trackLeadForm()` nunca dispara em campo vazio nem no simples clique do
+ * botão. Fica logo antes do `window.open()`, sem nenhum dado pessoal do
+ * formulário no payload (LGPD).
  */
 export function CTAFinal() {
   const [nome, setNome] = useState('');
@@ -17,7 +23,7 @@ export function CTAFinal() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const mensagem = montarMensagemContato({ nome, condominio, servico });
-    trackWhatsAppClick('formulario');
+    trackLeadForm();
     window.open(buildWhatsAppLink(mensagem), '_blank', 'noopener,noreferrer');
   }
 
