@@ -40,6 +40,13 @@ export function buildStructuredData() {
         telephone: site.telefone,
         email: site.email,
         inLanguage: 'pt-BR',
+        // Reforço de SEO/qualificação: sinaliza para buscadores que o público
+        // é quem contrata o serviço (síndico/administradora), não quem busca
+        // emprego.
+        audience: {
+          '@type': 'BusinessAudience',
+          audienceType: 'Síndicos e administradoras de condomínio',
+        },
         areaServed: site.regiaoAtendida.map((cidade) => ({
           '@type': 'City',
           name: cidade,

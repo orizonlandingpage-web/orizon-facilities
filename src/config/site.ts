@@ -12,7 +12,8 @@ export const site = {
 
   // 55 + DDD + número, só dígitos (sem +, espaço, hífen ou parênteses)
   whatsappNumero: '5579996384307',
-  whatsappMensagemPadrao: 'Olá! Vim pelo site da Orizon Facilities e gostaria de um orçamento.',
+  whatsappMensagemPadrao:
+    'Olá! Vim pelo site da Orizon Facilities e gostaria de um orçamento para o meu condomínio.',
 
   telefone: '(79) 99638-4307',
   email: 'orizonfacilities@gmail.com',
@@ -34,7 +35,7 @@ export const site = {
   // Reusada em <meta name="description">, Open Graph e no schema
   // ProfessionalService — mantém a mensagem de venda idêntica em todo canal.
   descricaoCurta:
-    'Limpeza, portaria, manutenção predial e jardinagem para condomínios em Aracaju e região. Escala 100% coberta e conformidade trabalhista auditada todo mês.',
+    'Terceirização de limpeza, portaria, manutenção e jardinagem para síndicos e administradoras em Aracaju. Conformidade trabalhista auditada todo mês.',
 
   // ID do container GTM — único script do Google carregado direto pelo código.
   // O GA4 (G-VGHZQPR2RB) é uma tag configurada dentro do próprio container,
