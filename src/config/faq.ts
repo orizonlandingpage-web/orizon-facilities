@@ -52,4 +52,11 @@ export const perguntas = [
     resposta:
       'Sim, com triagem de visitantes, controle de entrada e saída e procedimento escrito. É um serviço de portaria e monitoramento, dimensionado conforme o fluxo do seu condomínio.',
   },
+  // Pergunta "Vocês têm vagas de emprego?" fica comentada por enquanto —
+  // aguardando aprovação do cliente antes de subir para produção.
+  // {
+  //   pergunta: 'Vocês têm vagas de emprego?',
+  //   resposta:
+  //     'Não. Esta página e o WhatsApp de contato são exclusivos para síndicos e administradoras que buscam contratar os serviços da Orizon. Não recebemos candidaturas por aqui; se houver vaga aberta, ela é divulgada pelos canais de recrutamento da empresa, não por este contato comercial.',
+  // },
 ] as const;

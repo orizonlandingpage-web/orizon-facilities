@@ -57,7 +57,7 @@ export function Hero() {
         <div className="mx-auto w-full max-w-6xl px-6 py-20 sm:py-24">
           <div className="max-w-2xl border-l-4 border-gold pl-6">
             <p className="mb-4 font-display text-sm font-bold tracking-[0.25em] text-gold uppercase sm:mb-2">
-              Serviços Condominiais em Aracaju
+              Para síndicos e administradoras de condomínio na Grande Aracaju
             </p>
 
             <h1 className="font-display text-3xl leading-[1.05] font-bold text-offwhite sm:text-5xl sm:leading-[1.08] md:text-6xl">
