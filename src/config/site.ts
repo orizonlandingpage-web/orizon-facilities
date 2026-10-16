@@ -28,9 +28,10 @@ export const site = {
   cnpj: '67.938.834/0001-13',
 
   // Sem barra final: canonical, Open Graph e sitemap.xml montam a URL a
-  // partir daqui (ex.: `${site.url}/`). Trocar aqui é o único lugar a mudar
-  // quando o domínio definitivo estiver registrado.
-  url: 'https://orizonfacilities.com.br',
+  // partir daqui (ex.: `${site.url}/`). Precisa ser o domínio `www` — a
+  // Vercel redireciona (308) o apex sem `www` para este; usar o apex aqui
+  // faria crawlers seguirem um redirect a mais para chegar na URL canônica.
+  url: 'https://www.orizonfacilities.com.br',
 
   // Reusada em <meta name="description">, Open Graph e no schema
   // ProfessionalService — mantém a mensagem de venda idêntica em todo canal.
