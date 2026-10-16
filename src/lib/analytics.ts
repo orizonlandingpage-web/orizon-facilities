@@ -7,13 +7,22 @@ declare global {
 }
 
 /**
- * Réplica mínima do gtag() do snippet oficial: só empilha os argumentos em
- * `dataLayer` como um item `[comando, ...args]`. gtag.js/gtm.js leem esse
- * item por índice (`item[0]`, `item[1]`...), então um array simples aqui
- * tem exatamente o mesmo efeito do `arguments` usado no snippet original.
+ * Réplica do gtag() do snippet oficial — precisa empilhar o `arguments`
+ * (não um Array real via `...args`). Testado direto no contêiner de
+ * produção: um `['consent','update',{...}]` como Array literal fica parado
+ * no dataLayer sem erro, mas o GTM nunca processa — `google_tag_data.ics`
+ * nunca marca `usedUpdate`. O mesmo comando via `arguments` é reconhecido e
+ * aplicado. Foi exatamente esse bug que fazia todo `consent update` desta
+ * função (ou seja, toda resposta ao banner na mesma visita) ser ignorado,
+ * enquanto o `consent default` de public/consent-init.js — que já usa
+ * `arguments` — funcionava.
  */
-function gtag(...args: unknown[]): void {
-  window.dataLayer.push(args);
+function gtag(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- só define a aridade para o TS; o corpo usa `arguments`, ver comentário acima.
+  ..._args: unknown[]
+): void {
+  // eslint-disable-next-line prefer-rest-params -- `arguments` é exigido pelo GTM, ver comentário acima.
+  window.dataLayer.push(arguments);
 }
 
 function atualizarConsentimento(preferencias: ConsentPreferences): void {
