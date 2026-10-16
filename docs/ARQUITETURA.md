@@ -51,6 +51,11 @@ Tipografia: **Sora** (`--font-display`, títulos) e **Archivo** (`--font-body`, 
   `<script type="application/ld+json">` próprio). As perguntas do FAQ vivem em
   `src/config/faq.ts`, consumidas pelos dois. `public/robots.txt` e `public/sitemap.xml`
   têm o domínio (`site.url`) escrito literalmente — atualizar junto se ele mudar.
+  `site.url` precisa ser `https://www.orizonfacilities.com.br` (com `www`): a Vercel
+  redireciona (308) o domínio apex sem `www` para este — usar o apex em canonical/OG/JSON-LD
+  faria crawlers seguirem um redirect a mais para chegar na URL que o site de fato serve
+  (achado em auditoria de 2026-10-16, ver `index.html`, `public/robots.txt` e
+  `public/sitemap.xml`).
   `vite.config.ts` importa `structured-data.ts`, `site.ts` e `faq.ts` direto no topo do
   arquivo — ou seja, esses três módulos são avaliados **em Node, antes de `vite build`
   rodar**, para gerar o JSON-LD e o `<noscript>` do GTM via `transformIndexHtml`.
@@ -111,6 +116,22 @@ Tipografia: **Sora** (`--font-display`, títulos) e **Archivo** (`--font-body`, 
   programático — sem `<a>` sendo clicado —, por isso só ele precisa do evento manual.
   Reintroduzir um evento de clique nesses 3 links duplicaria a conversão que o GTM já
   registra.
+
+  **⚠️ Armadilha confirmada em produção (2026-10-16):** o helper `gtag()` interno de
+  `src/lib/analytics.ts` precisa empilhar o `arguments` da chamada, **não** um Array real
+  construído via `...args`. Os dois parecem equivalentes (ambos são array-like, com
+  `[0]`/`[1]`/`[2]` e `.length`), mas o GTM só reconhece e aplica comandos de
+  `consent`/`update` vindos de um `arguments`-object — um Array literal fica parado no
+  `dataLayer` sem erro nenhum, e `window.google_tag_data.ics.usedUpdate` nunca vira `true`.
+  Isso fazia toda resposta ao banner de cookies **na própria visita** (o caso mais comum)
+  nunca ser aplicada ao Google Tag: as requisições ao GA4 saíam sempre com `gcs=G100`
+  (tudo negado), batendo com o alerta "0% de consentimento concedido" no diagnóstico de
+  qualidade do GTM. Só visitantes recorrentes (consentimento restaurado por
+  `public/consent-init.js`, que já usa `arguments`) tinham o estado aplicado corretamente.
+  Confirmado por teste A/B direto no `dataLayer` do contêiner de produção — reproduzir
+  esse bug é tão simples quanto trocar `function gtag() { dataLayer.push(arguments) }`
+  por `function gtag(...args) { dataLayer.push(args) }`. Não "simplifique" esse helper de
+  volta para `...args` sem rodar esse teste de novo.
 - **Testes** — não há `vitest.config.ts`; o ambiente padrão do Vitest é `node`. Teste
   que toca `window`/DOM opta por `jsdom` só no próprio arquivo, via
   `// @vitest-environment jsdom` na primeira linha (`src/lib/analytics.test.ts`).
