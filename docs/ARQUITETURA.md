@@ -76,6 +76,23 @@ Tipografia: **Sora** (`--font-display`, títulos) e **Archivo** (`--font-body`, 
   hosts do Google necessários para analytics (ver bullet abaixo) — qualquer script de
   terceiro novo precisa de uma entrada explícita em `script-src`/`connect-src`/etc., já que
   não há `'unsafe-inline'`.
+
+  **⚠️ Armadilha confirmada em produção (2026-10-17):** `https://*.analytics.google.com`
+  no `connect-src` cobre subdomínios (ex.: `xyz.analytics.google.com`), mas **não cobre o
+  domínio nu** `analytics.google.com` — é assim que CSP wildcard funciona, `*.` exige pelo
+  menos um rótulo de subdomínio antes. O `gtag.js` do Google manda pings legítimos
+  (`user_engagement` e os próprios eventos de conversão) tanto para
+  `www.google-analytics.com` quanto para `analytics.google.com` (sem `www`) e
+  `www.google.com` — os dois últimos não tinham entrada em `connect-src` (só
+  `www.google.com` estava em `img-src`, que não cobre `fetch`/XHR) e ficavam bloqueados
+  pela própria CSP, silenciosamente — sem erro visível fora do console do navegador. Por
+  isso `connect-src` lista `https://analytics.google.com` e `https://www.google.com`
+  explicitamente, além do wildcard `https://*.analytics.google.com`. Confirmado via
+  Playwright direto contra o site publicado, interceptando só o header de CSP do
+  documento principal para comparar antes/depois sem precisar fazer deploy. Se o Google
+  mudar os domínios de coleta de novo, o sintoma reaparece como "tag disparou mas o
+  destino nunca recebeu" — olhar o console do navegador por `Content Security Policy`
+  antes de suspeitar do GTM.
 - **Analytics e consentimento** — o default de consentimento e o carregamento do GTM
   acontecem em **`public/consent-init.js`**, um `<script>` clássico (sem `type="module"`,
   sem `async`/`defer`) referenciado em `index.html` — precisa ser o primeiro `<script>` do
